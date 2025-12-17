@@ -5,7 +5,13 @@ import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
 
 /**
- * Класс запуска тестов Cucumber
+ * Runner-класс для запуска Cucumber-тестов через JUnit.
+ * <p>
+ * Настраивает параметры выполнения Cucumber:
+ * путь до feature-файлов, пакеты со step definitions и hook'ами,
+ * используемые плагины для вывода и генерации отчётов, а также фильтрацию сценариев по тегам.
+ *
+ * @author Сергей Лужин
  */
 @CucumberOptions(
         strict = false,
