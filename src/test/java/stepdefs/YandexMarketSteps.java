@@ -14,32 +14,31 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static config.Properties.testProperties;
-import static pages.YandexMarketPage.*;
+import static helpers.RawOfStringsUnpacker.unpack;
 
 public class YandexMarketSteps {
 
-YandexMarketPage yandexMarketPageBeforeSearch;
-YandexMarketPage yandexMarketPageAfterSearch;
+    private YandexMarketPage yandexMarketPage;
 
     @Given("пользователь открыл Яндекс Маркет")
     public void userOpensYandexMarket() {
         Driver.getWebDriver().get(testProperties.yandexMarketUrl());
-        yandexMarketPageBeforeSearch = new YandexMarketPage();
+        yandexMarketPage = new YandexMarketPage();
     }
 
     @When("он переходит в каталог")
     public void userOpensCatalog() {
-        yandexMarketPageBeforeSearch.clickOnCatalogButton();
+        yandexMarketPage.clickOnCatalogButton();
     }
 
     @When("он наводит курсор на раздел {string}")
     public void userHoversOnCategory(String category) {
-        yandexMarketPageBeforeSearch.hoverOnCategoryInCatalog(category);
+        yandexMarketPage.hoverOnCategoryInCatalog(category);
     }
 
     @When("он выбирает подкатегорию {string}")
     public void userChoosesSubcategory(String subcategory) {
-        yandexMarketPageBeforeSearch.clickOnSubcategoryInCatalog(subcategory);
+        yandexMarketPage.clickOnSubcategoryInCatalog(subcategory);
     }
 
     @Then("открыта страница раздела {string}")
@@ -51,30 +50,26 @@ YandexMarketPage yandexMarketPageAfterSearch;
 
     @When("пользователь в фильтрах выбирает производителей {string}")
     public void userChoosesBrandInFilters(String brandsRaw) {
-        List<String> brands = Arrays.stream(brandsRaw.split(","))
-                        .map(String::trim)
-                        .filter(s -> !s.isEmpty())
-                        .collect(Collectors.toList());
-
-        yandexMarketPageBeforeSearch.clickBrandCheckbox(brands);
+        List<String> brands = unpack(brandsRaw);
+        yandexMarketPage.clickBrandCheckbox(brands);
     }
 
     @When("дожидается прогрузки всех результатов поиска")
     public void userWaitsForProductsToLoad() {
-        yandexMarketPageBeforeSearch.scrollToBottomAndCollectAllProducts();
+        yandexMarketPage.scrollToBottomAndCollectAllProducts();
     }
 
-    @Then("в результатах отображаются только смартфоны производителей {string}")
-    public void correctProductsAfterFilters(String brandsRaw) {
-        List<String> brands = Arrays.stream(brandsRaw.split(","))
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .collect(Collectors.toList());
+    @Then("в результатах отображаются только смартфоны производителей {string} или их бренды {string}")
+    public void correctProductsAfterFilters(String manufacturersRaw, String brandsRaw) {
+        List<String> manufacturers = unpack(manufacturersRaw);
+        List<String> brands = unpack(brandsRaw);
+        List<String> combinedManufacturersAndBrands = new ArrayList<>(manufacturers);
+        combinedManufacturersAndBrands.addAll(brands);
 
         List<String> wrongTitles = new ArrayList<>();
 
-        for (Product product : yandexMarketPageBeforeSearch.productsOnPage) {
-            boolean containsBrand = brands.stream()
+        for (Product product : yandexMarketPage.productsOnPage) {
+            boolean containsBrand = combinedManufacturersAndBrands.stream()
                     .map(String::toLowerCase)
                     .anyMatch(brand -> product.getTitle().toLowerCase().contains(brand));
 

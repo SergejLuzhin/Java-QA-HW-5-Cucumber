@@ -78,18 +78,6 @@ public class YandexMarketPage {
     }
 
     /**
-     * Выполняет поиск товара по текстовому запросу.
-     *
-     * @param query строка запроса для поиска
-     * @author Сергей Лужин
-     */
-    public void findViaSearchInput(String query) {
-        searchInput = driver.findElement(By.xpath(xpathProperties.ymSearchInputXpath()));
-        searchInput.sendKeys(query);
-        searchInput.sendKeys(ENTER);
-    }
-
-    /**
      * Нажимает кнопку каталога.
      *
      * @author Сергей Лужин
@@ -129,38 +117,6 @@ public class YandexMarketPage {
         );
 
         subcategoryElement.click();
-    }
-
-    /**
-     * Устанавливает минимальную цену в фильтре товаров.
-     *
-     * @param price минимальная цена
-     * @author Сергей Лужин
-     */
-    public void setFilterPriceMin(int price) {
-        String xpath = xpathProperties.ymFilterPriceMinXpath();
-
-        WebElement inputFilterPriceMin = fluentWait.until(
-                visibilityOfElementLocated(By.xpath(xpath))
-        );
-
-        inputFilterPriceMin.sendKeys(Integer.toString(price));
-    }
-
-    /**
-     * Устанавливает максимальную цену в фильтре товаров.
-     *
-     * @param price максимальная цена
-     * @author Сергей Лужин
-     */
-    public void setFilterPriceMax(int price) {
-        String xpath = xpathProperties.ymFilterPriceMaxXpath();
-
-        WebElement inputFilterPriceMax = fluentWait.until(
-                visibilityOfElementLocated(By.xpath(xpath))
-        );
-
-        inputFilterPriceMax.sendKeys(Integer.toString(price));
     }
 
     /**

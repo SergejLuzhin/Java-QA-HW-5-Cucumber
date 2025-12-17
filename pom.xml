@@ -95,13 +95,6 @@
             <version>1.0.12</version>
         </dependency>
 
-        <!--Библиотека для сокращения шаблонного кода в классах-->
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.28</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -125,7 +118,7 @@
                 <configuration>
                     <argLine>
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
-                        -Dcucumber.options="--plugin io.qameta.allure.cucumber5jvm.AllureCucumber5Jvm"
+                        -Dallure.results.directory=${project.build.directory}/allure-results
                     </argLine>
                 </configuration>
                 <dependencies>
